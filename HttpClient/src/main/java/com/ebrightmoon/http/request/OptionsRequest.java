@@ -13,7 +13,7 @@ import io.reactivex.Observable;
 import io.reactivex.observers.DisposableObserver;
 
 /**
- * @Description: Options请求
+ *  Options请求
  * @author:
  * @date: 2017-04-28 16:07
  */

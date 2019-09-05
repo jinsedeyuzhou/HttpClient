@@ -2,8 +2,8 @@ package com.ebrightmoon.demo;
 
 import android.app.Application;
 
-import com.ebrightmoon.http.common.HttpGlobalConfig;
-import com.ebrightmoon.http.mode.ApiCode;
+import com.ebrightmoon.http.common.GlobalParams;
+import com.ebrightmoon.http.common.HttpApp;
 import com.ebrightmoon.http.mode.ApiHost;
 import com.ebrightmoon.http.restrofit.HttpClient;
 
@@ -12,13 +12,13 @@ import com.ebrightmoon.http.restrofit.HttpClient;
  * Author:wyy
  * Description:
  */
-public class MyApplication extends Application {
+public class MyApplication extends HttpApp {
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        HttpGlobalConfig.getInstance().baseUrl(ApiHost.getHost());
+        GlobalParams.getInstance().baseUrl(ApiHost.getHost());
         HttpClient.init(this);
 
     }

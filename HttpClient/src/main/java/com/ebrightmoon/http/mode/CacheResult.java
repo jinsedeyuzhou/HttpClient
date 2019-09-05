@@ -3,7 +3,7 @@ package com.ebrightmoon.http.mode;
 import java.io.Serializable;
 
 /**
- * @Description: 设置缓存后的数据返回结果，主要增加是否是缓存数据的区分
+ *  设置缓存后的数据返回结果，主要增加是否是缓存数据的区分
  */
 public class CacheResult<T> implements Serializable {
     private boolean isCache;

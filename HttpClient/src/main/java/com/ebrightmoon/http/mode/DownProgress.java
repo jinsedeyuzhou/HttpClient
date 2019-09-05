@@ -7,7 +7,7 @@ import java.math.BigInteger;
 import java.text.NumberFormat;
 
 /**
- * @Description: 下载进度，包含总大小、下载大小
+ *  下载进度，包含总大小、下载大小
 
  */
 public class DownProgress implements Parcelable {

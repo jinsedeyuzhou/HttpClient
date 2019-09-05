@@ -10,7 +10,7 @@ import java.lang.reflect.Type;
 import io.reactivex.Observable;
 
 /**
- * @Description: 缓存策略--只取缓存
+ *  缓存策略--只取缓存
  */
 public class OnlyCacheStrategy<T> extends CacheStrategy<T> {
     @Override

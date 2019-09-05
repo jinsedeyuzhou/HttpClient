@@ -13,7 +13,7 @@ import io.reactivex.Observable;
 import io.reactivex.observers.DisposableObserver;
 
 /**
- * @Description: Patch请求
+ *  Patch请求
  * @author:
  * @date: 17/5/14 20:29.
  */

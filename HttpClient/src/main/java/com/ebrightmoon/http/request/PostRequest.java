@@ -22,7 +22,7 @@ import okhttp3.MediaType;
 import okhttp3.RequestBody;
 
 /**
- * @Description: Post请求
+ *  Post请求
  * @author:
  * @date: 2017-04-28 16:06
  */

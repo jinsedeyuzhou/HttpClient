@@ -13,7 +13,7 @@ import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 
 /**
- * @Description: 缓存策略--优先网络
+ *  缓存策略--优先网络
  * @author:
  * @date: 16/12/31 14:32.
  */

@@ -31,7 +31,7 @@ import okio.Okio;
 import okio.Source;
 
 /**
- * @Description: 上传请求
+ *  上传请求
  * @author:
  * @date: 17/5/14 20:28.
  */

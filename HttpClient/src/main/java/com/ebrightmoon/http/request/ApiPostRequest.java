@@ -23,7 +23,7 @@ import okhttp3.MediaType;
 import okhttp3.RequestBody;
 
 /**
- * @Description: 返回APIResult的POST请求类
+ *  返回APIResult的POST请求类
  * @author:
  * @date: 17/5/28 15:48.
  */

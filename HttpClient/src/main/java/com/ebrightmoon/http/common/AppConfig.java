@@ -12,6 +12,7 @@ public class AppConfig {
         throw new UnsupportedOperationException("cannot be instantiated");
     }
 
+    public static final String BASE_URL = "";//默认连接
     public static final int DEFAULT_RETRY_COUNT = 3;//默认重试次数
     public static final int DEFAULT_RETRY_DELAY_MILLIS = 3000;//默认重试间隔时间（毫秒）
     public static final int MAX_AGE_ONLINE = 60;//默认最大在线缓存时间（秒）

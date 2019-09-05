@@ -5,7 +5,7 @@ import android.util.Log;
 
 import com.ebrightmoon.http.callback.UCallback;
 import com.ebrightmoon.http.common.AppConfig;
-import com.ebrightmoon.http.common.HttpGlobalConfig;
+import com.ebrightmoon.http.common.GlobalParams;
 import com.ebrightmoon.http.core.ApiCookie;
 import com.ebrightmoon.http.interceptor.HeadersInterceptor;
 import com.ebrightmoon.http.interceptor.UploadProgressInterceptor;
@@ -13,7 +13,6 @@ import com.ebrightmoon.http.mode.ApiHost;
 import com.ebrightmoon.http.mode.HttpHeaders;
 import com.ebrightmoon.http.restrofit.HttpClient;
 import com.ebrightmoon.http.util.SSL;
-import com.ebrightmoon.http.util.SSLUtils;
 
 import java.io.File;
 import java.lang.reflect.ParameterizedType;
@@ -32,12 +31,12 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * @Description: 请求基类
+ *  请求基类
  * @author:
  * @date: 2017-04-28 16:05
  */
 public abstract class BaseRequest<R extends BaseRequest> {
-    protected HttpGlobalConfig httpGlobalConfig;//全局配置
+    protected GlobalParams httpGlobalConfig;//全局配置
     protected Retrofit retrofit;//Retrofit对象
     protected List<Interceptor> interceptors = new ArrayList<>();//局部请求的拦截器
     protected List<Interceptor> networkInterceptors = new ArrayList<>();//局部请求的网络拦截器

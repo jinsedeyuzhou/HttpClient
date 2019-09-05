@@ -167,91 +167,98 @@ public interface ApiService {
     @POST()
     Observable<ResponseBody> uploadFiles(@Url() String url, @Part() List<MultipartBody.Part> params);
 
-    //====================================带请求头应用=============================================
+    //==================================== 带请求头应用 可通过拦截请求头设置 =============================================
+
+//    /**
+//     * 通用get请求
+//     *
+//     * @param url
+//     * @param maps
+//     * @return
+//     */
+//
+//    @GET()
+//    Observable<ResponseBody> get(@Url String url, @HeaderMap Map<String, String> headers, @QueryMap(encoded = true) Map<String, String> maps);
+//
+//
+//    /**
+//     * post 请求
+//     *
+//     * @param url
+//     * @param requestBody
+//     * @return
+//     */
+//    @POST()
+//    Observable<ResponseBody> post(@Url() String url, @HeaderMap Map<String, String> headers, @Body RequestBody requestBody);
+//
+//  /**
+//     * post 请求
+//     *
+//     * @param url
+//     * @param  maps
+//     * @return
+//     */
+//    @POST()
+//    Observable<ResponseBody> postForm(@Url() String url, @HeaderMap Map<String, String> headers, @FieldMap Map<String, Object> maps);
+//
+//
+//
+//    /**
+//     * put 提交表单数据
+//     *
+//     * @param url
+//     * @param maps
+//     * @return
+//     */
+//    @FormUrlEncoded
+//    @PUT()
+//    Observable<ResponseBody> put(@Url() String url, @HeaderMap Map<String, String> header, @FieldMap Map<String, String> maps);
+//
+//
+//    /**
+//     * 文件下载
+//     *
+//     * @param url
+//     * @param maps
+//     * @return
+//     */
+//    @Streaming
+//    @GET()
+//    Observable<ResponseBody> downFile(@Url() String url, @HeaderMap Map<String, String> header, @QueryMap Map<String, String> maps);
+//
+//
+//    /**
+//     * 多个文件上传
+//     *
+//     * @param url
+//     * @param params
+//     * @return
+//     */
+//    @Multipart
+//    @POST()
+//    Observable<ResponseBody> uploadFiles(@Url() String url, @HeaderMap Map<String, String> header, @PartMap() Map<String, RequestBody> params);
+//
+//    /**
+//     * 多个文件上传
+//     *
+//     * @param url
+//     * @param params
+//     * @return
+//     */
+//    @Multipart
+//    @POST()
+//    Observable<ResponseBody> uploadFiles(@Url() String url, @HeaderMap Map<String, String> header,
+//                                               @Part() List<MultipartBody.Part> params);
+//
+
 
     /**
-     * 通用get请求
-     *
+     * 下载
      * @param url
-     * @param maps
-     * @return
-     */
-
-    @GET()
-    Observable<ResponseBody> get(@Url String url, @HeaderMap Map<String, String> headers, @QueryMap(encoded = true) Map<String, String> maps);
-
-
-    /**
-     * post 请求
-     *
-     * @param url
-     * @param requestBody
-     * @return
-     */
-    @POST()
-    Observable<ResponseBody> post(@Url() String url, @HeaderMap Map<String, String> headers, @Body RequestBody requestBody);
-
-  /**
-     * post 请求
-     *
-     * @param url
-     * @param  maps
-     * @return
-     */
-    @POST()
-    Observable<ResponseBody> postForm(@Url() String url, @HeaderMap Map<String, String> headers, @FieldMap Map<String, Object> maps);
-
-
-
-    /**
-     * put 提交表单数据
-     *
-     * @param url
-     * @param maps
-     * @return
-     */
-    @FormUrlEncoded
-    @PUT()
-    Observable<ResponseBody> put(@Url() String url, @HeaderMap Map<String, String> header, @FieldMap Map<String, String> maps);
-
-
-    /**
-     * 文件下载
-     *
-     * @param url
-     * @param maps
      * @return
      */
     @Streaming
-    @GET()
-    Observable<ResponseBody> downFile(@Url() String url, @HeaderMap Map<String, String> header, @QueryMap Map<String, String> maps);
-
-
-    /**
-     * 多个文件上传
-     *
-     * @param url
-     * @param params
-     * @return
-     */
-    @Multipart
-    @POST()
-    Observable<ResponseBody> uploadFiles(@Url() String url, @HeaderMap Map<String, String> header, @PartMap() Map<String, RequestBody> params);
-
-    /**
-     * 多个文件上传
-     *
-     * @param url
-     * @param params
-     * @return
-     */
-    @Multipart
-    @POST()
-    Observable<ResponseBody> uploadFiles(@Url() String url, @HeaderMap Map<String, String> header,
-                                               @Part() List<MultipartBody.Part> params);
-
-
-
-
+    @GET
+    Observable<ResponseBody> download(@Url String url);
 
 }

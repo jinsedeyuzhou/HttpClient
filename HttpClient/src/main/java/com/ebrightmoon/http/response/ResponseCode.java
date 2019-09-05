@@ -1,6 +1,7 @@
 package com.ebrightmoon.http.response;
 
 /**
+ * 返回状态码
  */
 public class ResponseCode {
     //HTTP请求成功状态码

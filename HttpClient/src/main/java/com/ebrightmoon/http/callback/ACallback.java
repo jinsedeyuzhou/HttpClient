@@ -1,7 +1,7 @@
 package com.ebrightmoon.http.callback;
 
 /**
- * @Description: 请求接口回调
+ *  请求接口回调
  */
 public abstract class ACallback<T> {
     public abstract void onSuccess(T data);

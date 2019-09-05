@@ -15,7 +15,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 /**
- * @Description: 离线缓存拦截
+ *  离线缓存拦截 有网络获取网络或混存数据，无网络获取缓存数据
  */
 public class OfflineCacheInterceptor implements Interceptor {
     private Context context;

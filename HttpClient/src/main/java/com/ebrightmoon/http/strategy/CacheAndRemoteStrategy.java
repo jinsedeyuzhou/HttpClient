@@ -11,7 +11,7 @@ import io.reactivex.Observable;
 import io.reactivex.functions.Predicate;
 
 /**
- * @Description: 缓存策略--缓存和网络
+ *  缓存策略--缓存和网络
  */
 public class CacheAndRemoteStrategy<T> extends CacheStrategy<T> {
     @Override

@@ -9,7 +9,7 @@ import java.lang.reflect.Type;
 import io.reactivex.Observable;
 
 /**
- * @Description: 缓存策略--只取网络
+ *  缓存策略--只取网络
  */
 public class OnlyRemoteStrategy<T> extends CacheStrategy<T> {
     @Override

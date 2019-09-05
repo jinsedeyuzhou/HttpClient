@@ -24,7 +24,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
- * @Description: 针对响应数据进行缓存管理
+ *  针对响应数据进行缓存管理
  */
 public class ApiCache {
     private final DiskCache diskCache;

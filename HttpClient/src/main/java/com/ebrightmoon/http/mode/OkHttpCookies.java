@@ -8,7 +8,7 @@ import java.io.Serializable;
 import okhttp3.Cookie;
 
 /**
- * @Description: Cookie序列化对象
+ *  Cookie序列化对象
  */
 public class OkHttpCookies implements Serializable {
     private transient final Cookie cookies;

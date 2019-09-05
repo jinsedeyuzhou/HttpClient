@@ -13,7 +13,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 /**
- * @Description: 上传进度拦截
+ *  上传进度拦截
  */
 public class UploadProgressInterceptor implements Interceptor {
 

@@ -24,7 +24,7 @@ import okhttp3.Cookie;
 import okhttp3.HttpUrl;
 
 /**
- * @Description: Cookie仓库
+ *  Cookie仓库
  */
 public class CookiesStore {
     private final Map<String, ConcurrentHashMap<String, Cookie>> cookies;

@@ -5,7 +5,7 @@ import android.util.LruCache;
 
 
 /**
- * @Description: 内存缓存
+ *  内存缓存
  */
 public class MemoryCache implements ICache {
     private LruCache<String, Object> cache;

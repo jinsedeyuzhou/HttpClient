@@ -15,7 +15,7 @@ import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 
 /**
- * @Description: 缓存策略
+ *  缓存策略
  */
 abstract class CacheStrategy<T> implements ICacheStrategy<T> {
     <T> Observable<CacheResult<T>> loadCache(final ApiCache apiCache, final String key, final Type type) {

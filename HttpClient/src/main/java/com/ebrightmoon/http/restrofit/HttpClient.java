@@ -3,7 +3,7 @@ package com.ebrightmoon.http.restrofit;
 import android.content.Context;
 
 import com.ebrightmoon.http.callback.UCallback;
-import com.ebrightmoon.http.common.HttpGlobalConfig;
+import com.ebrightmoon.http.common.GlobalParams;
 import com.ebrightmoon.http.core.ApiCache;
 import com.ebrightmoon.http.core.ApiManager;
 import com.ebrightmoon.http.request.BaseHttpRequest;
@@ -35,9 +35,9 @@ public class HttpClient {
     private static ApiCache.Builder apiCacheBuilder;
     private static OkHttpClient okHttpClient;
 
-    private static final HttpGlobalConfig NET_GLOBAL_CONFIG = HttpGlobalConfig.getInstance();
+    private static final GlobalParams NET_GLOBAL_CONFIG = GlobalParams.getInstance();
 
-    public static HttpGlobalConfig config() {
+    public static GlobalParams config() {
         return NET_GLOBAL_CONFIG;
     }
 
@@ -52,28 +52,28 @@ public class HttpClient {
 
     public static Context getContext() {
         if (context == null) {
-            throw new IllegalStateException("Please call ViseHttp.init(this) in Application to initialize!");
+            throw new IllegalStateException("Please call HttpClient.init(this) in Application to initialize!");
         }
         return context;
     }
 
     public static OkHttpClient.Builder getOkHttpBuilder() {
         if (okHttpBuilder == null) {
-            throw new IllegalStateException("Please call ViseHttp.init(this) in Application to initialize!");
+            throw new IllegalStateException("Please call HttpClient.init(this) in Application to initialize!");
         }
         return okHttpBuilder;
     }
 
     public static Retrofit.Builder getRetrofitBuilder() {
         if (retrofitBuilder == null) {
-            throw new IllegalStateException("Please call ViseHttp.init(this) in Application to initialize!");
+            throw new IllegalStateException("Please call HttpClient.init(this) in Application to initialize!");
         }
         return retrofitBuilder;
     }
 
     public static ApiCache.Builder getApiCacheBuilder() {
         if (apiCacheBuilder == null) {
-            throw new IllegalStateException("Please call ViseHttp.init(this) in Application to initialize!");
+            throw new IllegalStateException("Please call HttpClient.init(this) in Application to initialize!");
         }
         return apiCacheBuilder;
     }

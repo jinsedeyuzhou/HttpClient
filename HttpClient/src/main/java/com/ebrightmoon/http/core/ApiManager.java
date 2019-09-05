@@ -6,7 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import io.reactivex.disposables.Disposable;
 
 /**
- * @Description: 请求管理，方便中途取消请求
+ *  请求管理，方便中途取消请求
  */
 public class ApiManager {
     private static ApiManager sInstance;

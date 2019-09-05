@@ -4,7 +4,7 @@ package com.ebrightmoon.http.mode;
 import com.ebrightmoon.http.common.AppConfig;
 
 /**
- * @Description: 主机信息
+ *  主机信息
  */
 public class ApiHost {
 

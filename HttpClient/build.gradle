@@ -22,6 +22,11 @@ android {
         }
     }
 
+    compileOptions {
+        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_8
+    }
+
 }
 
 dependencies {
@@ -40,4 +45,5 @@ dependencies {
     api 'com.google.code.gson:gson:2.8.5'
     api 'com.squareup.okhttp:okhttp-apache:2.5.0'
     api 'com.squareup.okhttp:okhttp-urlconnection:2.5.0'
+    api 'com.orhanobut:logger:2.1.1'
 }

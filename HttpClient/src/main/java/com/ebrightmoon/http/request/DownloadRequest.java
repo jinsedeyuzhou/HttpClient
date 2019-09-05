@@ -36,7 +36,7 @@ import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
 
 /**
- * @Description: 下载请求
+ *  下载请求
  * @author:
  * @date: 17/5/14 21:50.
  */

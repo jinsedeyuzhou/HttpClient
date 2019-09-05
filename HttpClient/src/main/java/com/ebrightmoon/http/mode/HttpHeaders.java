@@ -17,7 +17,7 @@ import java.util.Set;
 import java.util.TimeZone;
 
 /**
- * @Description: 请求头封装
+ *  请求头封装
  */
 public class HttpHeaders implements Serializable {
     private static final String FORMAT_HTTP_DATA = "EEE, dd MMM y HH:mm:ss 'GMT'";

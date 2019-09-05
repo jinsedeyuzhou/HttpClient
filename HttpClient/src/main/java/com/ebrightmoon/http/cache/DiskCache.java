@@ -19,7 +19,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * @Description: 磁盘缓存，KEY加密存储，可定制缓存时长
+ *  磁盘缓存，KEY加密存储，可定制缓存时长
  * @author:
  * @date: 2016-12-19 15:10
  */

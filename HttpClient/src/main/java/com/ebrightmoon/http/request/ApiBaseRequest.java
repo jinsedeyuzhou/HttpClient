@@ -12,7 +12,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 /**
- * @Description: 返回APIResult的基础请求类
+ *  返回APIResult的基础请求类
  * @author:
  * @date: 17/5/28 15:46.
  */

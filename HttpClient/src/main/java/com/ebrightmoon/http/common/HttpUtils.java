@@ -7,7 +7,14 @@ import com.ebrightmoon.http.util.MD5;
 
 import org.apache.http.message.BasicNameValuePair;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,52 +38,6 @@ public class HttpUtils {
     }
 
 
-
-    /**
-     * 生成header相关数据
-     * @param params
-     * @return
-     */
-    public static Map<String, String> excute(Map<String, String> params) {
-        String timestamp = System.currentTimeMillis() / 1000 + "";
-        Map<String, String> temp = new HashMap<>();
-        temp.putAll(params);
-        temp.put("Timestamp", timestamp);
-        temp.put("Platform", "Android");
-        temp.put("PublicKey", "A4GNADCBiQKBgQDi7DfgJeRzqEiBgQDi");
-        StringBuffer requestParams = spellParams(temp);
-        HashMap<String, String> headers = new HashMap<>();
-        headers.put("Timestamp", timestamp);
-        headers.put("Platform", "Android");
-        headers.put("Sign", MD5.encode(requestParams.toString()));
-        return headers;
-    }
-//
-//
-//    /**
-//     * 图片验证码
-//     * @param context
-//     * @param imageView
-//     */
-//    public static void showImage(Context context, ImageView imageView) {
-//        String timestamp = System.currentTimeMillis() / 1000 + "";
-//        Map<String, String> maps = new HashMap<>();
-//        maps.put("Timestamp", timestamp);
-//        maps.put("Platform", "Android");
-//        maps.put("PublicKey", "A4GNADCBiQKBgQDi7DfgJeRzqEiBgQDi");
-//        StringBuffer requestParams = AppConfig.spellParams(maps);
-//        GlideUrl glideUrl = new GlideUrl("http://192.168.0.17:8888/api/v1.0/Image/captcha/" + SystemUtils.getUuid(), new LazyHeaders.Builder()
-//                .addHeader("Sign", MD5.encode(requestParams.toString()))
-//                .addHeader("Timestamp", timestamp)
-//                .addHeader("Platform", "Android")
-//                .build());
-//        Glide.with(context)
-//                .load(glideUrl)
-//                .error(R.mipmap.ic_launcher)
-//                .into(imageView);
-//    }
-//
-//
     /**
      * 判断是否是汉字
      */
@@ -95,8 +56,7 @@ public class HttpUtils {
         }
         return false;
     }
-//
-//
+
     /**
      * 拼接参数
      *
@@ -132,6 +92,85 @@ public class HttpUtils {
         return sb;
     }
 
+
+    /**
+     * 将输入流写入文件
+     *
+     * @param inputString
+     * @param filePath
+     */
+    public static String writeFile(InputStream inputString, String filePath) {
+        File file = new File(filePath);
+        if (file.exists()) {
+            file.delete();
+        }
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(file);
+
+            byte[] b = new byte[1024];
+
+            int len;
+            while ((len = inputString.read(b)) != -1) {
+                fos.write(b, 0, len);
+            }
+            inputString.close();
+            fos.close();
+            return "下载成功";
+        } catch (FileNotFoundException e) {
+            return e.toString();
+        } catch (IOException e) {
+            return e.toString();
+        }
+    }
+
+
+
+    /**
+     * 获取第一级type
+     *
+     * @param t
+     * @param <T>
+     * @return
+     */
+    public static  <T> Type getType(T t) {
+        Type genType = t.getClass().getGenericSuperclass();
+        Type[] params = ((ParameterizedType) genType).getActualTypeArguments();
+        Type type = params[0];
+        Type finalNeedType;
+        if (params.length > 1) {
+            if (!(type instanceof ParameterizedType)) throw new IllegalStateException("没有填写泛型参数");
+            finalNeedType = ((ParameterizedType) type).getActualTypeArguments()[0];
+        } else {
+            finalNeedType = type;
+        }
+        return finalNeedType;
+    }
+
+    /**
+     * 获取次一级type(如果有)
+     *
+     * @param t
+     * @param <T>
+     * @return
+     */
+    public static  <T> Type getSubType(T t) {
+        Type genType = t.getClass().getGenericSuperclass();
+        Type[] params = ((ParameterizedType) genType).getActualTypeArguments();
+        Type type = params[0];
+        Type finalNeedType;
+        if (params.length > 1) {
+            if (!(type instanceof ParameterizedType)) throw new IllegalStateException("没有填写泛型参数");
+            finalNeedType = ((ParameterizedType) type).getActualTypeArguments()[0];
+        } else {
+            if (type instanceof ParameterizedType) {
+                finalNeedType = ((ParameterizedType) type).getActualTypeArguments()[0];
+            } else {
+                finalNeedType = type;
+            }
+        }
+        return finalNeedType;
+    }
 
 
 }

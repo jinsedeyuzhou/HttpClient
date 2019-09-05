@@ -1,5 +1,6 @@
 package com.ebrightmoon.http.body;
 
+import android.annotation.SuppressLint;
 import android.support.annotation.NonNull;
 
 
@@ -68,6 +69,7 @@ public class UploadProgressRequestBody extends RequestBody {
             super(sink);
         }
 
+        @SuppressLint("CheckResult")
         @Override
         public void write(@NonNull Buffer source, long byteCount) throws IOException {
             super.write(source, byteCount);

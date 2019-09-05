@@ -1,7 +1,7 @@
 package com.ebrightmoon.http.request;
 
 /**
- * @Description: 传入自定义Retrofit接口的请求类型
+ *  传入自定义Retrofit接口的请求类型
  * @author:
  * @date: 17/7/22 15:11.
  */

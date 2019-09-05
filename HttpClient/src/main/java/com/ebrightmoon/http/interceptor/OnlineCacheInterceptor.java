@@ -12,7 +12,7 @@ import okhttp3.Interceptor;
 import okhttp3.Response;
 
 /**
- * @Description: 在线缓存拦截
+ *  在线缓存拦截 无论有无网络我们都先获取缓存的数据。
  */
 public class OnlineCacheInterceptor implements Interceptor {
     private String cacheControlValue;

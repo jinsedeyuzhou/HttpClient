@@ -1,7 +1,7 @@
 package com.ebrightmoon.http.mode;
 
 /**
- * @Description: 缓存模式
+ *  缓存模式
  */
 public enum CacheMode {
     /**

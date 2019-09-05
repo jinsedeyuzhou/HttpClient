@@ -14,7 +14,7 @@ import io.reactivex.Observable;
 import io.reactivex.observers.DisposableObserver;
 
 /**
- * @Description: 返回APIResult的GET请求类
+ *  返回APIResult的GET请求类
  * @author:
  * @date: 17/5/13 14:31.
  */

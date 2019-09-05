@@ -8,27 +8,59 @@
 
 
     <Button
-        android:id="@+id/btn_post"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Post"
-        />
+        android:id="@+id/btn_post_json"
+        style="@style/ButtonStype"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:text="Post(参数格式为json)"
+        android:textSize="16sp" />
 
+    <Button
+        android:id="@+id/btn_post_form"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        style="@style/ButtonStype"
+        android:text="Post(参数格式为form)"
+        android:textSize="16sp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="请求结果"
-        android:layout_marginTop="20dp"
+    <Button
+        android:id="@+id/btn_post_cache"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        style="@style/ButtonStype"
+        android:text="Post(带缓存)"
+        android:textSize="16sp" />
 
-        />
+    <Button
+        android:id="@+id/btn_get"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        style="@style/ButtonStype"
+        android:text="Get请求"
+        android:textSize="16sp" />
 
-    <TextView
-        android:id="@+id/tv_show"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <Button
+        android:id="@+id/btn_get_cache"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        style="@style/ButtonStype"
+        android:text="Get请求(带缓存)"
+        android:textSize="16sp" />
+    <Button
+        android:id="@+id/btn_upload"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        style="@style/ButtonStype"
+        android:text="Upload（上传）"
+        android:textSize="16sp" />
 
-        />
+    <Button
+        android:id="@+id/btn_download"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        style="@style/ButtonStype"
+        android:text="Download（下载）"
+        android:textSize="16sp" />
 
 
 

@@ -48,7 +48,19 @@ public class ApiTransformer {
     }
 
 
-
+    public static  <T> ObservableTransformer<ResponseBody, T> norTransformer(final Type type,final  int retryCount,final int retryDelayMillis ) {
+        return new ObservableTransformer<ResponseBody, T>() {
+            @Override
+            public ObservableSource<T> apply(Observable<ResponseBody> apiResultObservable) {
+                return apiResultObservable
+                        .subscribeOn(Schedulers.io())
+                        .unsubscribeOn(Schedulers.io())
+                        .map(new ApiFunc<T>(type))
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .retryWhen(new ApiRetryFunc(retryCount, retryDelayMillis));
+            }
+        };
+    }
 
     public static <T> ObservableTransformer<T, T> norTransformer() {
         return new ObservableTransformer<T, T>() {

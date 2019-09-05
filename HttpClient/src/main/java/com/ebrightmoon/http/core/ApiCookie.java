@@ -14,7 +14,7 @@ import okhttp3.CookieJar;
 import okhttp3.HttpUrl;
 
 /**
- * @Description: Cookie
+ *  Cookie
  */
 public class ApiCookie implements CookieJar {
 

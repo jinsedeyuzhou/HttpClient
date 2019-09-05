@@ -6,10 +6,7 @@ import com.ebrightmoon.http.response.ResponseResult;
 
 import io.reactivex.functions.Function;
 
-/**
 
- * @param <T>
- */
 public class ApiDataFunc<T> implements Function<ResponseResult<T>, T> {
     public ApiDataFunc() {
     }

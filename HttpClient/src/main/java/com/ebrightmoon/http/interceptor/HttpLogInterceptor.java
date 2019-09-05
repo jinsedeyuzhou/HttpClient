@@ -20,7 +20,7 @@ import okhttp3.internal.http.HttpHeaders;
 import okio.Buffer;
 
 /**
- * @Description: Http日志打印拦截
+ *  Http日志打印拦截
  * @author:
  * @date: 2017-04-08 15:16
  */

@@ -25,7 +25,7 @@ import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
 
 /**
- * @Description: 通用的请求基类
+ *  通用的请求基类
  * @author:
  * @date: 17/7/22 15:23.
  */

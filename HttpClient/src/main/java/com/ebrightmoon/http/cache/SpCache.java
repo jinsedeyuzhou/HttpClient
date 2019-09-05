@@ -9,7 +9,7 @@ import com.ebrightmoon.http.util.BytesUtils;
 import com.ebrightmoon.http.util.HexUtil;
 
 /**
- * @Description: SharedPreferences存储，支持对象加密存储
+ *  SharedPreferences存储，支持对象加密存储
  */
 public class SpCache implements ICache {
     private SharedPreferences sp;
