@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="70dp"
+    android:layout_height="80dp"
+    android:gravity="center"
+    >
+
+    <ImageView
+        android:id="@+id/ivPreviewPhoto"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginBottom="6dp"
+        android:layout_centerInParent="true"
+        />
+
+
+    <ImageView
+        android:id="@+id/ivPreviewDelete"
+        android:layout_width="13dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="-3dp"
+        android:layout_height="13dp"
+        android:src="@drawable/ic_preview_delete"
+        />
+
+
+
+</RelativeLayout>

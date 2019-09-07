@@ -35,7 +35,6 @@ public class OnlineCacheInterceptor implements Interceptor {
                     .header("Cache-Control", "public, " + cacheControlValue)
                     .removeHeader("Pragma")
                     .build();
-
         } else {
             return originalResponse;
         }

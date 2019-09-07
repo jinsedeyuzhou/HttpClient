@@ -1,67 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-
-    <Button
-        android:id="@+id/btn_post_json"
-        style="@style/ButtonStype"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:text="Post(参数格式为json)"
-        android:textSize="16sp" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/btn_post_form"
-        android:layout_width="match_parent"
-        android:layout_height="44dp"
-        style="@style/ButtonStype"
-        android:text="Post(参数格式为form)"
-        android:textSize="16sp" />
+        <Button
+            android:id="@+id/btn_post_json"
+            style="@style/ButtonStype"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:text="Post(参数格式为json)"
+            android:textSize="16sp" />
 
-    <Button
-        android:id="@+id/btn_post_cache"
-        android:layout_width="match_parent"
-        android:layout_height="44dp"
-        style="@style/ButtonStype"
-        android:text="Post(带缓存)"
-        android:textSize="16sp" />
+        <Button
+            android:id="@+id/btn_post_form"
+            style="@style/ButtonStype"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:text="Post(参数格式为form)"
+            android:textSize="16sp" />
 
-    <Button
-        android:id="@+id/btn_get"
-        android:layout_width="match_parent"
-        android:layout_height="44dp"
-        style="@style/ButtonStype"
-        android:text="Get请求"
-        android:textSize="16sp" />
-
-    <Button
-        android:id="@+id/btn_get_cache"
-        android:layout_width="match_parent"
-        android:layout_height="44dp"
-        style="@style/ButtonStype"
-        android:text="Get请求(带缓存)"
-        android:textSize="16sp" />
-    <Button
-        android:id="@+id/btn_upload"
-        android:layout_width="match_parent"
-        android:layout_height="44dp"
-        style="@style/ButtonStype"
-        android:text="Upload（上传）"
-        android:textSize="16sp" />
-
-    <Button
-        android:id="@+id/btn_download"
-        android:layout_width="match_parent"
-        android:layout_height="44dp"
-        style="@style/ButtonStype"
-        android:text="Download（下载）"
-        android:textSize="16sp" />
+        <Button
+            android:id="@+id/btn_post_cache"
+            style="@style/ButtonStype"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:text="Post(带缓存)"
+            android:textSize="16sp" />
 
 
+        <Button
+            android:id="@+id/btn_post_offcache"
+            style="@style/ButtonStype"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:text="Post(okhttp离线缓存)"
+            android:textSize="16sp" />
 
-</LinearLayout>
+        <Button
+            android:id="@+id/btn_post_baseurl"
+            style="@style/ButtonStype"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:text="Post(URL)"
+            android:textSize="16sp" />
+        <Button
+            android:id="@+id/btn_post_retrofit"
+            style="@style/ButtonStype"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:text="Post(自定义retrofit)"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/btn_get"
+            style="@style/ButtonStype"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:text="Get请求"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/btn_get_cache"
+            style="@style/ButtonStype"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:text="Get请求(带缓存)"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/btn_upload"
+            style="@style/ButtonStype"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:text="上传下载"
+            android:textSize="16sp" />
+
+
+
+    </LinearLayout>
+</ScrollView>

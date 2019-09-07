@@ -2,6 +2,7 @@ package com.ebrightmoon.http.restrofit;
 
 
 import android.content.Context;
+import android.os.Environment;
 import android.util.Log;
 
 
@@ -18,6 +19,7 @@ import com.ebrightmoon.http.core.ApiCookie;
 import com.ebrightmoon.http.core.ApiManager;
 import com.ebrightmoon.http.core.ApiTransformer;
 import com.ebrightmoon.http.func.ApiFunc;
+import com.ebrightmoon.http.func.ApiRetryFunc;
 import com.ebrightmoon.http.interceptor.GzipRequestInterceptor;
 import com.ebrightmoon.http.interceptor.HeadersInterceptor;
 import com.ebrightmoon.http.interceptor.HttpResponseInterceptor;
@@ -27,13 +29,24 @@ import com.ebrightmoon.http.interceptor.OnlineCacheInterceptor;
 import com.ebrightmoon.http.interceptor.UploadProgressInterceptor;
 import com.ebrightmoon.http.mode.ApiHost;
 import com.ebrightmoon.http.mode.CacheResult;
+import com.ebrightmoon.http.mode.DownProgress;
 import com.ebrightmoon.http.mode.MediaTypes;
+import com.ebrightmoon.http.mode.Method;
+import com.ebrightmoon.http.recycle.ActivityLifeCycleEvent;
+import com.ebrightmoon.http.recycle.RxHelper;
 import com.ebrightmoon.http.subscriber.ApiCallbackSubscriber;
+import com.ebrightmoon.http.subscriber.DownCallbackSubscriber;
 import com.ebrightmoon.http.util.GsonUtil;
 import com.ebrightmoon.http.util.SSL;
 
 
+import org.reactivestreams.Publisher;
+
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.net.Proxy;
 import java.util.ArrayList;
@@ -46,8 +59,14 @@ import java.util.concurrent.TimeUnit;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSocketFactory;
 
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.Flowable;
+import io.reactivex.FlowableEmitter;
+import io.reactivex.FlowableOnSubscribe;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.Cache;
@@ -78,7 +97,6 @@ import static com.ebrightmoon.http.mode.MediaTypes.APPLICATION_JSON_TYPE;
 
 public class AppClient {
 
-    private List<MultipartBody.Part> multipartBodyParts;
     private static int DEFAULT_TIMEOUT = 120;
     private Retrofit retrofit;
     private ApiService apiService;
@@ -106,13 +124,8 @@ public class AppClient {
     private String baseUrl;//基础域名
     private int retryDelayMillis;//请求失败重试间隔时间
     private int retryCount;//请求失败重试次数
-    private Request httpRequest;
-    //---------------------局部参数设置---------------------
-//    protected Map<String, Object> forms = new LinkedHashMap<>();
-//    protected StringBuilder stringBuilder = new StringBuilder();
-//    protected RequestBody requestBody;
-//    protected MediaType mediaType;
-//    protected String content;
+    private Request httpRequest;// 局部参数设置
+    private Request.Builder requestBuilder;// 局部参数设置
 
     private static AppClient instance;
 
@@ -149,7 +162,25 @@ public class AppClient {
         if (service == null) {
             throw new RuntimeException("Api service is null!");
         }
+        initGlobalParams();
+        initLocalParams();
         return retrofit.create(service);
+    }
+
+    /**
+     * 通用 请求
+     *
+     * @param request
+     * @param callback
+     * @param <T>
+     */
+    public <T> void request(Request.Builder request, ACallback<T> callback) {
+        if (request != null) {
+            httpRequest = request.build();
+        }
+        initGlobalParams();
+        initLocalParams();
+        execute(callback);
     }
 
     /**
@@ -159,79 +190,180 @@ public class AppClient {
      * @param callback
      * @param <T>
      */
-    public  <T> void get(Request request, ACallback<T> callback) {
+    public <T> void get(Request.Builder request, ACallback<T> callback) {
         if (request != null) {
-            httpRequest = request;
+            request.setMethod(Method.GET);
+            httpRequest = request.build();
         }
         initGlobalParams();
-        initLocalParams(callback);
-        executeGet(callback);
-    }
-
-    private <T> Observable<T> executeGet(Type type) {
-        return apiService.get(httpRequest.getSuffixUrl(), httpRequest.getParams()).compose(ApiTransformer.<T>norTransformer(type, httpRequest.getRetryCount(), httpRequest.getRetryDelayMillis()));
-    }
-
-    private <T> Observable<CacheResult<T>> cacheGetExecute(Type type) {
-        return this.<T>execute(type).compose(apiCacheBuilder.build().<T>transformer(httpRequest.getCacheMode(), type));
-    }
-
-    private <T> void executeGet(ACallback<T> callback) {
-        DisposableObserver disposableObserver = new ApiCallbackSubscriber(callback);
-        if (httpRequest.getTag() != null) {
-            ApiManager.get().add(httpRequest.getTag(), disposableObserver);
-        }
-        if (httpRequest.isLocalCache()) {
-            this.cacheGetExecute(getSubType(callback)).subscribe(disposableObserver);
-        } else {
-            this.executeGet(HttpUtils.getType(callback)).subscribe(disposableObserver);
-        }
-    }
-
-    public  <T> void post(Request request, ACallback<T> callback) {
-        if (request != null) {
-            httpRequest = request;
-        }
-        initGlobalParams();
-        initLocalParams(callback);
+        initLocalParams();
         execute(callback);
     }
 
-    private <T> Observable<T> execute(Type type) {
+    /**
+     * post 请求
+     *
+     * @param request
+     * @param callback
+     * @param <T>
+     */
+    public <T> void post(Request.Builder request, ACallback<T> callback) {
+        if (request != null) {
+            request.setMethod(Method.POST);
+            httpRequest = request.build();
+        }
+        initGlobalParams();
+        initLocalParams();
+        execute(callback);
+    }
 
-        if (httpRequest.getForms() != null && httpRequest.getForms().size() > 0) {
+    /**
+     * 下载 请求
+     *
+     * @param request
+     * @param callback
+     * @param <T>
+     */
+    public <T> void download(Request.Builder request, ACallback<T> callback) {
+        if (request != null) {
+            request.setMethod(Method.DOWNLOAD);
+            httpRequest = request.build();
+        }
+        initGlobalParams();
+        initLocalParams();
+        execute(callback);
+    }
+
+    /**
+     * 上传 请求
+     *
+     * @param request
+     * @param callback
+     * @param <T>
+     */
+    public <T> void upload(Request.Builder request, ACallback<T> callback) {
+        if (request != null) {
+            request.setMethod(Method.UPLOAD);
+            httpRequest = request.build();
+        }
+        initGlobalParams();
+        initLocalParams();
+        execute(callback);
+    }
+
+
+    /**
+     * 默认为Get请求
+     *
+     * @param type
+     * @param <T>
+     * @return
+     */
+    private <T> Observable<T> execute(Type type) {
+        apiService = retrofit.create(ApiService.class);
+        if (httpRequest.getMethodType() == Method.GET) {
+            return apiService.get(httpRequest.getSuffixUrl(), httpRequest.getParams())
+                    .compose(RxHelper.bindUntilEvent(ActivityLifeCycleEvent.DESTROY, httpRequest.getLifecycleSubject()))
+                    .compose(ApiTransformer.<T>norTransformer(type, httpRequest.getRetryCount(), httpRequest.getRetryDelayMillis()));
+        } else if (httpRequest.getMethodType() == Method.POST) {
+            if (httpRequest.getForms() != null && httpRequest.getForms().size() > 0) {
+                if (httpRequest.getParams() != null && httpRequest.getParams().size() > 0) {
+                    Iterator<Map.Entry<String, String>> entryIterator = httpRequest.getParams().entrySet().iterator();
+                    Map.Entry<String, String> entry;
+                    while (entryIterator.hasNext()) {
+                        entry = entryIterator.next();
+                        if (entry != null) {
+                            httpRequest.getForms().put(entry.getKey(), entry.getValue());
+                        }
+                    }
+                }
+                return apiService.postForm(httpRequest.getSuffixUrl(), httpRequest.getForms())
+                        .compose(RxHelper.bindUntilEvent(ActivityLifeCycleEvent.DESTROY, httpRequest.getLifecycleSubject()))
+                        .compose(ApiTransformer.<T>norTransformer(type, httpRequest.getRetryCount(), httpRequest.getRetryDelayMillis()));
+            }
+            if (httpRequest.getRequestBody() != null) {
+                return apiService.postBody(httpRequest.getSuffixUrl(), httpRequest.getRequestBody())
+                        .compose(RxHelper.bindUntilEvent(ActivityLifeCycleEvent.DESTROY, httpRequest.getLifecycleSubject()))
+                        .compose(ApiTransformer.<T>norTransformer(type, httpRequest.getRetryCount(), httpRequest.getRetryDelayMillis()));
+            }
+            if (httpRequest.getContent() != null && httpRequest.getMediaType() != null) {
+                httpRequest.setRequestBody(RequestBody.create(httpRequest.getMediaType(), httpRequest.getContent()));
+                return apiService.postBody(httpRequest.getSuffixUrl(), httpRequest.getRequestBody())
+                        .compose(RxHelper.bindUntilEvent(ActivityLifeCycleEvent.DESTROY, httpRequest.getLifecycleSubject()))
+                        .compose(ApiTransformer.<T>norTransformer(type, httpRequest.getRetryCount(), httpRequest.getRetryDelayMillis()));
+            }
+            return apiService.post(httpRequest.getSuffixUrl(), httpRequest.getParams())
+                    .compose(RxHelper.bindUntilEvent(ActivityLifeCycleEvent.DESTROY, httpRequest.getLifecycleSubject()))
+                    .compose(ApiTransformer.<T>norTransformer(type, httpRequest.getRetryCount(), httpRequest.getRetryDelayMillis()));
+
+        } else if (httpRequest.getMethodType() == Method.UPLOAD) {
             if (httpRequest.getParams() != null && httpRequest.getParams().size() > 0) {
                 Iterator<Map.Entry<String, String>> entryIterator = httpRequest.getParams().entrySet().iterator();
                 Map.Entry<String, String> entry;
                 while (entryIterator.hasNext()) {
                     entry = entryIterator.next();
                     if (entry != null) {
-                        httpRequest.getForms().put(entry.getKey(), entry.getValue());
+                        httpRequest.getMultipartBodyParts().add(MultipartBody.Part.createFormData(entry.getKey(), entry.getValue()));
                     }
                 }
             }
-            return apiService.postForm(httpRequest.getSuffixUrl(), httpRequest.getForms()).compose(ApiTransformer.<T>norTransformer(type, httpRequest.getRetryCount(), httpRequest.getRetryDelayMillis()));
+            return apiService.uploadFiles(httpRequest.getSuffixUrl(), httpRequest.getMultipartBodyParts()).compose(ApiTransformer.<T>norTransformer(type, httpRequest.getRetryCount(), httpRequest.getRetryDelayMillis()));
+
+        } else if (httpRequest.getMethodType() == Method.DOWNLOAD) {
+            return (Observable<T>) apiService
+                    .downFile(httpRequest.getSuffixUrl(), httpRequest.getParams())
+                    .subscribeOn(Schedulers.io())
+                    .unsubscribeOn(Schedulers.io())
+                    .toFlowable(BackpressureStrategy.LATEST)
+                    .flatMap(new Function<ResponseBody, Publisher<?>>() {
+                        @Override
+                        public Publisher<?> apply(final ResponseBody responseBody) throws Exception {
+                            return Flowable.create(new FlowableOnSubscribe<DownProgress>() {
+                                @Override
+                                public void subscribe(FlowableEmitter<DownProgress> subscriber) throws Exception {
+                                    File dir = getDiskCacheDir(httpRequest.getDirName());
+                                    if (!dir.exists()) {
+                                        dir.mkdirs();
+                                    }
+                                    File file = new File(dir.getPath() + File.separator + httpRequest.getFileName());
+                                    saveFile(subscriber, file, responseBody);
+                                }
+                            }, BackpressureStrategy.LATEST);
+                        }
+                    })
+                    .sample(1, TimeUnit.SECONDS)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .toObservable()
+                    .retryWhen(new ApiRetryFunc(retryCount, retryDelayMillis));
+        } else {
+            return apiService.get(httpRequest.getSuffixUrl(), httpRequest.getParams()).compose(ApiTransformer.<T>norTransformer(type, httpRequest.getRetryCount(), httpRequest.getRetryDelayMillis()));
         }
-        if (httpRequest.getRequestBody() != null) {
-            return apiService.postBody(httpRequest.getSuffixUrl(), httpRequest.getRequestBody()).compose(ApiTransformer.<T>norTransformer(type, httpRequest.getRetryCount(), httpRequest.getRetryDelayMillis()));
-        }
-        if (httpRequest.getContent() != null && httpRequest.getMediaType() != null) {
-            httpRequest.setRequestBody(RequestBody.create(httpRequest.getMediaType(), httpRequest.getContent()));
-            return apiService.postBody(httpRequest.getSuffixUrl(), httpRequest.getRequestBody()).compose(ApiTransformer.<T>norTransformer(type, httpRequest.getRetryCount(), httpRequest.getRetryDelayMillis()));
-        }
-        return apiService.post(httpRequest.getSuffixUrl(), httpRequest.getParams()).compose(ApiTransformer.<T>norTransformer(type, httpRequest.getRetryCount(), httpRequest.getRetryDelayMillis()));
+
     }
 
     private <T> Observable<CacheResult<T>> cacheExecute(Type type) {
-        return this.<T>execute(type).compose(apiCacheBuilder.build().<T>transformer(httpRequest.getCacheMode(), type));
+        if (httpRequest.getMethodType() == Method.GET) {
+            return this.<T>execute(type).compose(RxHelper.bindUntilEvent(ActivityLifeCycleEvent.DESTROY, httpRequest.getLifecycleSubject())).compose(apiCacheBuilder.build().<T>transformer(httpRequest.getCacheMode(), type));
+        } else if (httpRequest.getMethodType() == Method.POST) {
+            return this.<T>execute(type).compose(RxHelper.bindUntilEvent(ActivityLifeCycleEvent.DESTROY, httpRequest.getLifecycleSubject())).compose(apiCacheBuilder.build().<T>transformer(httpRequest.getCacheMode(), type));
+        } else {
+            return this.<T>execute(type).compose(RxHelper.bindUntilEvent(ActivityLifeCycleEvent.DESTROY, httpRequest.getLifecycleSubject())).compose(apiCacheBuilder.build().<T>transformer(httpRequest.getCacheMode(), type));
+        }
     }
 
-    private  <T> void execute(ACallback<T> callback) {
-        DisposableObserver disposableObserver = new ApiCallbackSubscriber(callback);
+    private <T> void execute(ACallback<T> callback) {
+        DisposableObserver disposableObserver;
+        if (httpRequest.getMethodType() == Method.DOWNLOAD) {
+            disposableObserver = new DownCallbackSubscriber(callback);
+        } else if (httpRequest.getMethodType() == Method.UPLOAD) {
+            disposableObserver = new ApiCallbackSubscriber(callback);
+        } else {
+            disposableObserver = new ApiCallbackSubscriber(callback);
+        }
         if (httpRequest.getTag() != null) {
             ApiManager.get().add(httpRequest.getTag(), disposableObserver);
         }
-        if (httpRequest.isLocalCache()) {
+        if (httpRequest.isLocalCache() && httpRequest.getMethodType() != Method.DOWNLOAD && httpRequest.getMethodType() != Method.UPLOAD) {
             this.cacheExecute(getSubType(callback)).subscribe(disposableObserver);
         } else {
             this.execute(HttpUtils.getType(callback)).subscribe(disposableObserver);
@@ -241,7 +373,7 @@ public class AppClient {
     /**
      * 初始化局部参数
      */
-    private <T> void initLocalParams(ACallback<T> callback) {
+    private void initLocalParams() {
 
         OkHttpClient.Builder newBuilder = okHttpBuilder.build().newBuilder();
 
@@ -297,9 +429,9 @@ public class AppClient {
             newBuilder.cache(httpCache);
         }
 
-        if (baseUrl != null) {
+        if (httpRequest.getBaseUrl() != null) {
             Retrofit.Builder newRetrofitBuilder = new Retrofit.Builder();
-            newRetrofitBuilder.baseUrl(baseUrl);
+            newRetrofitBuilder.baseUrl(httpRequest.getBaseUrl());
             if (converterFactory != null) {
                 newRetrofitBuilder.addConverterFactory(converterFactory);
             }
@@ -309,7 +441,7 @@ public class AppClient {
             if (callFactory != null) {
                 newRetrofitBuilder.callFactory(callFactory);
             }
-            newBuilder.hostnameVerifier(new SSL.UnSafeHostnameVerifier(baseUrl));
+            newBuilder.hostnameVerifier(new SSL.UnSafeHostnameVerifier(httpRequest.getBaseUrl()));
             newRetrofitBuilder.client(newBuilder.build());
             retrofit = newRetrofitBuilder.build();
         } else {
@@ -339,9 +471,9 @@ public class AppClient {
             }
         }
         if (httpRequest.getBaseUrl() != null && httpRequest.isLocalCache() && httpRequest.getCacheKey() == null) {
-            apiCacheBuilder.cacheKey(baseUrl);
+            apiCacheBuilder.cacheKey(httpRequest.getBaseUrl());
         }
-        apiService = retrofit.create(ApiService.class);
+
 
     }
 
@@ -416,25 +548,6 @@ public class AppClient {
 
 
     /**
-     * @param url                下载地址
-     * @param saveFile           保存文件
-     * @param disposableObserver 控制是否取消网络
-     * @return
-     */
-    public DisposableObserver downLoad(String url, String saveFile, DisposableObserver disposableObserver) {
-        create(ApiService.class).download(url)
-                .subscribeOn(Schedulers.io())
-                .unsubscribeOn(Schedulers.io())
-                .map(ResponseBody::byteStream)
-                .observeOn(Schedulers.computation())// 用于计算任务
-                .map(inputStream -> writeFile(inputStream, saveFile))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(disposableObserver);
-        return disposableObserver;
-    }
-
-
-    /**
      * 不带参数校验通用get请求
      *
      * @param url
@@ -467,57 +580,6 @@ public class AppClient {
                 .map(new ApiFunc<T>(getSubType(callback)))
                 .compose(ApiTransformer.<T>norTransformer())
                 .subscribe(disposableObserver);
-    }
-
-
-    /**
-     * @param fileMap
-     * @return
-     */
-    public AppClient addFiles(Map<String, File> fileMap) {
-        if (fileMap == null) {
-            return this;
-        }
-        for (Map.Entry<String, File> entry : fileMap.entrySet()) {
-            addFile(entry.getKey(), entry.getValue());
-        }
-        return this;
-    }
-
-    /**
-     * @param key
-     * @param file
-     * @return
-     */
-    public AppClient addFile(String key, File file) {
-        return addFile(key, file, null);
-    }
-
-    /**
-     * 返回ResponseResult  数据
-     *
-     * @param key
-     * @param file
-     * @param callback
-     * @return
-     */
-    public AppClient addFile(String key, File file, UCallback callback) {
-        if (key == null || file == null) {
-            return this;
-        }
-        if (multipartBodyParts == null) {
-            multipartBodyParts = new ArrayList<>();
-        }
-        RequestBody requestBody = RequestBody.create(MediaTypes.APPLICATION_OCTET_STREAM_TYPE, file);
-        if (callback != null) {
-            UploadProgressRequestBody uploadProgressRequestBody = new UploadProgressRequestBody(requestBody, callback);
-            MultipartBody.Part part = MultipartBody.Part.createFormData(key, file.getName(), uploadProgressRequestBody);
-            multipartBodyParts.add(part);
-        } else {
-            MultipartBody.Part part = MultipartBody.Part.createFormData(key, file.getName(), requestBody);
-            multipartBodyParts.add(part);
-        }
-        return this;
     }
 
 
@@ -872,7 +934,7 @@ public class AppClient {
      */
     public AppClient cacheOffline(Cache httpCache, final int cacheControlValue) {
         networkInterceptor(new OfflineCacheInterceptor(mContext, cacheControlValue));
-        interceptor(new OfflineCacheInterceptor(mContext, cacheControlValue));
+        interceptor(new OfflineCacheInterceptor(mContext));
         this.httpCache = httpCache;
         return this;
     }
@@ -958,5 +1020,106 @@ public class AppClient {
             throw new NullPointerException(message);
         }
         return t;
+    }
+
+
+    /**
+     * 添加请求订阅者
+     *
+     * @param tag
+     * @param disposable
+     */
+    public void addDisposable(Object tag, Disposable disposable) {
+        ApiManager.get().add(tag, disposable);
+    }
+
+    /**
+     * 根据Tag取消请求
+     */
+    public void cancelTag(Object tag) {
+        ApiManager.get().cancel(tag);
+    }
+
+    /**
+     * 取消所有请求请求
+     */
+    public void cancelAll() {
+        ApiManager.get().cancelAll();
+    }
+
+    /**
+     * 清除对应Key的缓存
+     *
+     * @param key
+     */
+    public void removeCache(String key) {
+        apiCacheBuilder.build().remove(key);
+    }
+
+    /**
+     * 清楚所有缓存并关闭缓存
+     *
+     * @return
+     */
+    public Disposable clearCache() {
+        return apiCacheBuilder.build().clear();
+    }
+
+
+    private void saveFile(FlowableEmitter<? super DownProgress> sub, File saveFile, ResponseBody resp) {
+        InputStream inputStream = null;
+        OutputStream outputStream = null;
+        try {
+            try {
+                int readLen;
+                int downloadSize = 0;
+                byte[] buffer = new byte[8192];
+
+                DownProgress downProgress = new DownProgress();
+                inputStream = resp.byteStream();
+                outputStream = new FileOutputStream(saveFile);
+
+                long contentLength = resp.contentLength();
+                downProgress.setTotalSize(contentLength);
+
+                while ((readLen = inputStream.read(buffer)) != -1) {
+                    outputStream.write(buffer, 0, readLen);
+                    downloadSize += readLen;
+                    downProgress.setDownloadSize(downloadSize);
+                    sub.onNext(downProgress);
+                }
+                outputStream.flush();
+                sub.onComplete();
+            } finally {
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+                if (outputStream != null) {
+                    outputStream.close();
+                }
+                if (resp != null) {
+                    resp.close();
+                }
+            }
+        } catch (IOException e) {
+            sub.onError(e);
+        }
+    }
+
+    private File getDiskCacheDir(String dirName) {
+        String rootName = getDiskCachePath(mContext);
+        return new File(rootName + File.separator + dirName);
+    }
+
+    private String getDiskCachePath(Context context) {
+        String cachePath;
+        if ((Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())
+                || !Environment.isExternalStorageRemovable())
+                && context.getExternalCacheDir() != null) {
+            cachePath = context.getExternalCacheDir().getPath();
+        } else {
+            cachePath = context.getCacheDir().getPath();
+        }
+        return cachePath;
     }
 }

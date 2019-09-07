@@ -1,1 +1,1 @@
-include ':app',':HttpClient'
+include ':app',':HttpClient',':picture_library', ':ucrop'

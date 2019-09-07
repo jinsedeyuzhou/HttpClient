@@ -1,5 +1,8 @@
 package com.ebrightmoon.demo;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
@@ -10,11 +13,14 @@ import android.widget.Toast;
 
 import com.ebrightmoon.http.callback.ACallback;
 import com.ebrightmoon.http.common.Request;
+import com.ebrightmoon.http.core.ApiTransformer;
 import com.ebrightmoon.http.mode.CacheMode;
 import com.ebrightmoon.http.mode.CacheResult;
 import com.ebrightmoon.http.restrofit.AppClient;
 import com.ebrightmoon.http.restrofit.HttpClient;
+import com.ebrightmoon.http.subscriber.ApiCallbackSubscriber;
 import com.ebrightmoon.http.util.GsonUtil;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
@@ -42,7 +48,7 @@ import retrofit2.Retrofit;
  * sign : 20748eb8f360ac9c08a2e1e242d00393
  */
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ShoppingCart shoppingCart;
     private String json;
@@ -55,6 +61,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button btn_get_cache;
     private Map<String, Object> forms;
     private Map<String, String> params;
+    private Button btn_post_offcache;
+    private RxPermissions rxPermissions;
+    private Button btn_post_retrofit;
+    private Button btn_post_baseurl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,24 +94,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    @SuppressLint("CheckResult")
     private void initView() {
-
+        rxPermissions = new RxPermissions(this);
         params = new LinkedHashMap<>();
         forms = new LinkedHashMap<>();
-        params.put("member_id","1502");
-        params.put("loginAccount","hetong001");
-        params.put("account_type","10");
-        params.put("device_id","b25e8eb903401c72e0175589");
-        params.put("cartId","16126");
-        params.put("os_version","8.0.0");
-        params.put("version_code","17");
-        params.put("channel","anzhi");
-        params.put("productCount","3");
-        params.put("token","1f41c45931205bb9d8b65f945ba0d811");
-        params.put("network","wifi");
-        params.put("device_brand","Xiaomi");
-        params.put("device_platform","android");
-        params.put("timestamp",System.currentTimeMillis()+"");
+        params.put("member_id", "1502");
+        params.put("loginAccount", "hetong001");
+        params.put("account_type", "10");
+        params.put("device_id", "b25e8eb903401c72e0175589");
+        params.put("cartId", "16126");
+        params.put("os_version", "8.0.0");
+        params.put("version_code", "17");
+        params.put("channel", "anzhi");
+        params.put("productCount", "1");
+        params.put("token", "1f41c45931205bb9d8b65f945ba0d811");
+        params.put("network", "wifi");
+        params.put("device_brand", "Xiaomi");
+        params.put("device_platform", "android");
+        params.put("timestamp", System.currentTimeMillis() + "");
         forms.putAll(params);
         btn_post_json = findViewById(R.id.btn_post_json);
         btn_post_json.setOnClickListener(this);
@@ -115,17 +126,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btn_get.setOnClickListener(this);
         btn_upload = findViewById(R.id.btn_upload);
         btn_upload.setOnClickListener(this);
-        btn_download = findViewById(R.id.btn_download);
-        btn_download.setOnClickListener(this);
+        btn_post_offcache = findViewById(R.id.btn_post_offcache);
+        btn_post_offcache.setOnClickListener(this);
+        btn_post_baseurl = findViewById(R.id.btn_post_baseurl);
+        btn_post_baseurl.setOnClickListener(this);
+        btn_post_retrofit = findViewById(R.id.btn_post_retrofit);
+        btn_post_retrofit.setOnClickListener(this);
 
-
-
+        rxPermissions
+                .request(Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .subscribe(granted -> {
+                    if (granted) {
+                        // All requested permissions are granted
+                    } else {
+                        // At least one permission is denied
+                    }
+                });
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId())
-        {
+        switch (v.getId()) {
             case R.id.btn_post_json:
                 postJson();
                 break;
@@ -134,6 +156,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btn_post_cache:
                 postCache();
+                break;
+            case R.id.btn_post_offcache:
+                postOffcache();
+                break;
+            case R.id.btn_post_retrofit:
+                postRestrofit();
+                break;
+            case R.id.btn_post_baseurl:
+                postUrl();
                 break;
             case R.id.btn_get_cache:
                 getCache();
@@ -144,30 +175,86 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btn_upload:
                 upload();
                 break;
-            case R.id.btn_download:
-                download();
-                break;
+
         }
     }
 
-    private void download() {
-
-    }
-
-    private void upload() {
-
-    }
-
-    private void getRequest() {
-        Request request=new Request.Builder()
+    private void postUrl() {
+        Request.Builder request = new Request.Builder()
                 .setSuffixUrl("api/mobile/cart/updateCartCount")
-                .setParams(params)
-                .build();
-        AppClient.getInstance().get(request,new ACallback<String>(){
+                .setBaseUrl("https://t3.fsyuncai.com/")
+                .setForms(forms)
+                .setHttpCache(true)
+                ;
+        AppClient.getInstance().post(request, new ACallback<String>() {
 
             @Override
             public void onSuccess(String data) {
-                Toast.makeText(MainActivity.this,data,Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, data, Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onFail(int errCode, String errMsg) {
+
+            }
+        });
+    }
+
+    private void postRestrofit() {
+
+        AppClient.getInstance()
+                .create(ShoppingCartService.class)
+                .getAuthor(forms)
+                .compose(ApiTransformer.norTransformer())
+                .subscribe(new ApiCallbackSubscriber<>(new ACallback<Shopping>() {
+                    @Override
+                    public void onSuccess(Shopping data) {
+                        Toast.makeText(MainActivity.this, data.toString(), Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onFail(int errCode, String errMsg) {
+
+                    }
+                }));
+
+    }
+
+    private void postOffcache() {
+
+        Request.Builder request = new Request.Builder()
+                .setSuffixUrl("api/mobile/cart/updateCartCount")
+                .setForms(forms)
+                .setHttpCache(true)
+                ;
+        AppClient.getInstance().post(request, new ACallback<String>() {
+
+            @Override
+            public void onSuccess(String data) {
+                Toast.makeText(MainActivity.this, data, Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onFail(int errCode, String errMsg) {
+
+            }
+        });
+    }
+
+
+    private void upload() {
+        startActivity(new Intent(this, UploadActivity.class));
+    }
+
+    private void getRequest() {
+        Request.Builder request = new Request.Builder()
+                .setSuffixUrl("api/mobile/cart/updateCartCount")
+                .setParams(params);
+        AppClient.getInstance().get(request, new ACallback<String>() {
+
+            @Override
+            public void onSuccess(String data) {
+                Toast.makeText(MainActivity.this, data, Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -179,20 +266,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void getCache() {
-        Request request=new Request.Builder()
+        Request.Builder request = new Request.Builder()
                 .setSuffixUrl("api/mobile/cart/updateCartCount")
                 .setParams(params)
                 .setLocalCache(true)
                 .setCacheMode(CacheMode.FIRST_CACHE)
                 .setCacheTime(30000)
-                .build();
-        AppClient.getInstance().get(request,new ACallback<CacheResult<String>>(){
+                ;
+        AppClient.getInstance().get(request, new ACallback<CacheResult<String>>() {
             @Override
             public void onSuccess(CacheResult<String> data) {
                 if (data == null || data.getCacheData() == null) {
                     return;
                 }
-                Toast.makeText(MainActivity.this,data.toString(),Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, data.toString(), Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -203,19 +290,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void postCache() {
+        Request.Builder request = new Request.Builder()
+                .setSuffixUrl("api/mobile/cart/getShoppingCartList")
+                .setContent(json)
+                .setCacheMode(CacheMode.FIRST_CACHE)
+                .setLocalCache(true)
+                .setCacheTime(200000)
+                ;
+        AppClient.getInstance().post(request, new ACallback<CacheResult<String>>() {
 
+            @Override
+            public void onSuccess(CacheResult<String> data) {
+                if (data == null || data.getCacheData() == null) {
+                    return;
+                }
+                Toast.makeText(MainActivity.this, data.toString(), Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onFail(int errCode, String errMsg) {
+
+            }
+        });
     }
 
     private void postForm() {
-        Request request=new Request.Builder()
+        Request.Builder request = new Request.Builder()
                 .setSuffixUrl("api/mobile/cart/updateCartCount")
                 .setForms(forms)
-                .build();
-        AppClient.getInstance().post(request,new ACallback<String>(){
+                ;
+        AppClient.getInstance().post(request, new ACallback<String>() {
 
             @Override
             public void onSuccess(String data) {
-                Toast.makeText(MainActivity.this,data,Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, data, Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -226,15 +334,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void postJson() {
-        Request request=new Request.Builder()
+        Request.Builder request = new Request.Builder()
                 .setSuffixUrl("api/mobile/cart/getShoppingCartList")
                 .setContent(json)
-                .build();
-        AppClient.getInstance().post(request,new ACallback<String>(){
+                ;
+        AppClient.getInstance().post(request, new ACallback<String>() {
 
             @Override
             public void onSuccess(String data) {
-                Toast.makeText(MainActivity.this,data,Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, data, Toast.LENGTH_LONG).show();
             }
 
             @Override

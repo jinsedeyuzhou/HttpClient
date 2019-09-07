@@ -38,7 +38,7 @@ public class HttpApp extends Application {
         Logger.addLogAdapter(new AndroidLogAdapter(formatStrategy) {
             @Override
             public boolean isLoggable(int priority, String tag) {
-                return isApkDebugable(app);
+                return true;
             }
         });
     }
