@@ -266,12 +266,15 @@ public final class Request {
             return this;
         }
 
+
         /**
-         * lifestyle
+         * 生命周期管理
          * @param lifecycleSubject
+         * @return
          */
-        public Builder setLifecycleSubject(ActivityLifeCycleEvent lifecycleSubject) {
-            this.lifecycleSubject.onNext(lifecycleSubject);
+
+        public Builder setLifecycleSubject(BehaviorSubject<ActivityLifeCycleEvent> lifecycleSubject) {
+            this.lifecycleSubject = lifecycleSubject;
             return this;
         }
 
