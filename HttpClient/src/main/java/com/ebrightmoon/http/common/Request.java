@@ -153,7 +153,6 @@ public final class Request {
             this.writeTimeOut = AppConfig.DEFAULT_TIMEOUT;
             this.connectTimeOut = AppConfig.DEFAULT_TIMEOUT;
             this.isHttpCache = false;
-            this.baseUrl = AppConfig.BASE_URL;
             this.cacheMode = CacheMode.FIRST_CACHE;
             this.cacheTime = 3000;
             this.params = new LinkedHashMap<>();
@@ -539,7 +538,6 @@ public final class Request {
         }
 
         public Request build() {
-            if (baseUrl == null) throw new IllegalStateException("url == null");
             return new Request(this);
         }
 

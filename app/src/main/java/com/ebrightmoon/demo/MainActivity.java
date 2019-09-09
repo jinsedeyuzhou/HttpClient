@@ -225,8 +225,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Request.Builder request = new Request.Builder()
                 .setSuffixUrl("api/mobile/cart/updateCartCount")
                 .setForms(forms)
-                .setHttpCache(true)
-                ;
+                .setHttpCache(true);
         AppClient.getInstance().post(request, new ACallback<String>() {
 
             @Override
