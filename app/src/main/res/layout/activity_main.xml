@@ -76,6 +76,13 @@
             android:textSize="16sp" />
 
         <Button
+            android:id="@+id/btn_get_onlinecache"
+            style="@style/ButtonStype"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:text="Get请求(http缓存)"
+            android:textSize="16sp" />
+        <Button
             android:id="@+id/btn_upload"
             style="@style/ButtonStype"
             android:layout_width="match_parent"

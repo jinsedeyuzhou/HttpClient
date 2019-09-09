@@ -32,6 +32,8 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import retrofit2.Retrofit;
 
+import static com.ebrightmoon.http.mode.ApiHost.getHttp;
+
 /**
  * catSort : 0
  * cityId : 1
@@ -65,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private RxPermissions rxPermissions;
     private Button btn_post_retrofit;
     private Button btn_post_baseurl;
+    private Button btn_get_onlinecache;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,6 +135,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btn_post_baseurl.setOnClickListener(this);
         btn_post_retrofit = findViewById(R.id.btn_post_retrofit);
         btn_post_retrofit.setOnClickListener(this);
+        btn_get_onlinecache = findViewById(R.id.btn_get_onlinecache);
+        btn_get_onlinecache.setOnClickListener(this);
 
         rxPermissions
                 .request(Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -175,8 +180,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btn_upload:
                 upload();
                 break;
+            case R.id.btn_get_onlinecache:
+                getHttp();
+                break;
 
         }
+    }
+
+    private void getHttp() {
+        Request.Builder request = new Request.Builder()
+                .setSuffixUrl("api/mobile/cart/updateCartCount")
+                .setParams(params)
+                .setHttpCache(true);
+        AppClient.getInstance().get(request, new ACallback<String>() {
+            @Override
+            public void onSuccess(String data) {
+                if (data == null ) {
+                    return;
+                }
+                Toast.makeText(MainActivity.this, data, Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onFail(int errCode, String errMsg) {
+
+            }
+        });
     }
 
     private void postUrl() {
