@@ -11,6 +11,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.ebrightmoon.demo.http.Callback;
+import com.ebrightmoon.demo.http.HttpManager;
+import com.ebrightmoon.demo.http.RequestParams;
 import com.ebrightmoon.http.callback.ACallback;
 import com.ebrightmoon.http.common.Request;
 import com.ebrightmoon.http.core.ApiTransformer;
@@ -333,6 +336,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     return;
                 }
                 Toast.makeText(MainActivity.this, data.toString(), Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onFail(int errCode, String errMsg) {
+
+            }
+        });
+
+        HttpManager.getHttp().get(this, new RequestParams(), new Callback<String>() {
+            @Override
+            public void onSuccess(String data) {
+
             }
 
             @Override
