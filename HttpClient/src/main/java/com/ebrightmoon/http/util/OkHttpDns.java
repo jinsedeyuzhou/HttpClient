@@ -8,7 +8,7 @@ import okhttp3.Dns;
 
 /**
  * 作者：create by  Administrator on 2019/1/19
- * 邮箱：2315813288@qq.com
+ * 邮箱：
  */
 public class OkHttpDns implements Dns {
 

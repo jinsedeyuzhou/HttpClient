@@ -5,7 +5,7 @@ import android.util.DisplayMetrics;
 
 /**
  * 作者：create by  Administrator on 2019/1/17
- * 邮箱：2315813288@qq.com
+ * 邮箱：
  */
 public class DisplayUtil {
     /**

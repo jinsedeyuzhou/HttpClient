@@ -10,7 +10,7 @@ import io.reactivex.subjects.BehaviorSubject;
 
 /**
  * 作者：create by  Administrator on 2018/9/26
- * 邮箱：2315813288@qq.com
+ * 邮箱：
  *
  *     public <T> void get(String url, Map<String, String> params, ACallback<T> callback) {
  DisposableObserver disposableObserver = new ApiCallbackSubscriber<T>(callback);

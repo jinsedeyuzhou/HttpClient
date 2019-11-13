@@ -29,7 +29,7 @@ import javax.net.ssl.X509TrustManager;
 
 /**
  * 作者：create by  Administrator on 2019/1/18
- * 邮箱：2315813288@qq.com
+ * 邮箱：
  */
 public class SSL {
     public static SSLSocketFactory getSslSocketFactory(InputStream[] certificates, InputStream bksFile, String
