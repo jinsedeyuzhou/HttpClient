@@ -2,6 +2,7 @@
 基于retrofit，Rxjava 封装的请求库，支持网络请求生命周期管理等
 
 
+# License
 Copyright (C) jinsedeyuzhou, The Framework Open Source Project
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
