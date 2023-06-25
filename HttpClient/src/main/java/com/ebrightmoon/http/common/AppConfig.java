@@ -24,7 +24,7 @@ public class AppConfig {
     public static final String CACHE_HTTP_DIR = "http_cache";//默认HTTP缓存目录
     public static final long CACHE_NEVER_EXPIRE = -1;//永久不过期
     public static final String COOKIE_PREFS = "Cookies_Prefs";//默认Cookie缓存目录
-    public static final String API_HOST = "https://t3.fsyuncai.com/";//默认API主机地址
+    public static final String API_HOST = "https://t4.fsyuncai.com/";//默认API主机地址
     public static final String DEFAULT_DOWNLOAD_DIR = "download";//默认下载目录
     public static final String DEFAULT_DOWNLOAD_FILE_NAME = "download_file.tmp";//默认下载文件名称
 

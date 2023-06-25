@@ -90,7 +90,108 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         shoppingCart.setLoginAccount("");
         shoppingCart.setDevice_platform("mobile");
         shoppingCart.setSign("20748eb8f360ac9c08a2e1e242d00393");
-        json = "{\"catSort\":0,\"cityId\":1,\"currentPage\":1,\"customerId\":\"\",\"memberId\":\"1149\",\"timeSort\":1,\"warehouseId\":1,\"platformType\":2,\"token\":\"63e000663ba54343ee374811ac6d50bc\",\"accountType\":\"20\",\"loginAccount\":\"\",\"device_platform\":\"mobile\",\"sign\":\"20748eb8f360ac9c08a2e1e242d00393\"}";
+        json = "{\n" +
+                "    \"billCode\": 1,\n" +
+                "    \"billId\": 1,\n" +
+                "    \"carCode\": 1,\n" +
+                "    \"carId\": 1,\n" +
+                "    \"carModelId\": 1,\n" +
+                "    \"carModelName\": 1,\n" +
+                "    \"dispatcherBillCode\": 1,\n" +
+                "    \"dispatcherBillId\": 1,\n" +
+                "    \"list\": [\n" +
+                "        {\n" +
+                "            \"addr\": \"中国北京市大兴区黄村(地区)镇海鑫北路\",\n" +
+                "            \"ctime\": 1592284648,\n" +
+                "            \"id\": 243,\n" +
+                "            \"latitude\": \"39.723451\",\n" +
+                "            \"longitude\": \"116.419071\",\n" +
+                "            \"speed\": \"0.0\",\n" +
+                "            \"userId\": 111\n" +
+                "        },\n" +
+                "        {\n" +
+                "            \"addr\": \"中国北京市大兴区黄村(地区)镇海鑫北路\",\n" +
+                "            \"ctime\": 1592284648,\n" +
+                "            \"id\": 244,\n" +
+                "            \"latitude\": \"39.723451\",\n" +
+                "            \"longitude\": \"116.419071\",\n" +
+                "            \"speed\": \"0.0\",\n" +
+                "            \"userId\": 111\n" +
+                "        },\n" +
+                "        {\n" +
+                "            \"addr\": \"中国北京市大兴区黄村(地区)镇海鑫北路\",\n" +
+                "            \"ctime\": 1592284648,\n" +
+                "            \"id\": 245,\n" +
+                "            \"latitude\": \"39.723451\",\n" +
+                "            \"longitude\": \"116.419071\",\n" +
+                "            \"speed\": \"0.0\",\n" +
+                "            \"userId\": 111\n" +
+                "        },\n" +
+                "        {\n" +
+                "            \"addr\": \"中国北京市大兴区黄村(地区)镇海鑫北路\",\n" +
+                "            \"ctime\": 1592284648,\n" +
+                "            \"id\": 246,\n" +
+                "            \"latitude\": \"39.723451\",\n" +
+                "            \"longitude\": \"116.419071\",\n" +
+                "            \"speed\": \"0.0\",\n" +
+                "            \"userId\": 111\n" +
+                "        },\n" +
+                "        {\n" +
+                "            \"addr\": \"中国北京市大兴区黄村(地区)镇海鑫北路\",\n" +
+                "            \"ctime\": 1592284648,\n" +
+                "            \"id\": 247,\n" +
+                "            \"latitude\": \"39.723451\",\n" +
+                "            \"longitude\": \"116.419071\",\n" +
+                "            \"speed\": \"0.0\",\n" +
+                "            \"userId\": 111\n" +
+                "        },\n" +
+                "        {\n" +
+                "            \"addr\": \"中国北京市大兴区黄村(地区)镇海鑫北路\",\n" +
+                "            \"ctime\": 1592284648,\n" +
+                "            \"id\": 248,\n" +
+                "            \"latitude\": \"39.723451\",\n" +
+                "            \"longitude\": \"116.419071\",\n" +
+                "            \"speed\": \"0.0\",\n" +
+                "            \"userId\": 111\n" +
+                "        },\n" +
+                "        {\n" +
+                "            \"addr\": \"中国北京市大兴区黄村(地区)镇海鑫北路\",\n" +
+                "            \"ctime\": 1592284648,\n" +
+                "            \"id\": 249,\n" +
+                "            \"latitude\": \"39.723451\",\n" +
+                "            \"longitude\": \"116.419071\",\n" +
+                "            \"speed\": \"0.0\",\n" +
+                "            \"userId\": 111\n" +
+                "        },\n" +
+                "        {\n" +
+                "            \"addr\": \"中国北京市大兴区黄村(地区)镇海鑫北路\",\n" +
+                "            \"ctime\": 1592284630,\n" +
+                "            \"id\": 238,\n" +
+                "            \"latitude\": \"39.723489\",\n" +
+                "            \"longitude\": \"116.419066\",\n" +
+                "            \"speed\": \"0.0\",\n" +
+                "            \"userId\": 111\n" +
+                "        },\n" +
+                "        {\n" +
+                "            \"addr\": \"中国北京市大兴区黄村(地区)镇海鑫北路\",\n" +
+                "            \"ctime\": 1592284630,\n" +
+                "            \"id\": 239,\n" +
+                "            \"latitude\": \"39.723489\",\n" +
+                "            \"longitude\": \"116.419065\",\n" +
+                "            \"speed\": \"0.0\",\n" +
+                "            \"userId\": 111\n" +
+                "        },\n" +
+                "        {\n" +
+                "            \"addr\": \"中国北京市大兴区黄村(地区)镇海鑫北路\",\n" +
+                "            \"ctime\": 1592284630,\n" +
+                "            \"id\": 240,\n" +
+                "            \"latitude\": \"39.723489\",\n" +
+                "            \"longitude\": \"116.419065\",\n" +
+                "            \"speed\": \"0.0\",\n" +
+                "            \"userId\": 111\n" +
+                "        }\n" +
+                "    ]\n" +
+                "}";
 
         initView();
         bindEvent();
@@ -344,17 +445,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-        HttpManager.getHttp().get(this, new RequestParams(), new Callback<String>() {
-            @Override
-            public void onSuccess(String data) {
-
-            }
-
-            @Override
-            public void onFail(int errCode, String errMsg) {
-
-            }
-        });
+//        HttpManager.getHttp().get(this, new RequestParams(), new Callback<String>() {
+//            @Override
+//            public void onSuccess(String data) {
+//
+//            }
+//
+//            @Override
+//            public void onFail(int errCode, String errMsg) {
+//
+//            }
+//        });
     }
 
     private void postForm() {
@@ -378,7 +479,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void postJson() {
         Request.Builder request = new Request.Builder()
-                .setSuffixUrl("api/mobile/cart/getShoppingCartList")
+                .setSuffixUrl("tmsmobile/route/upload")
                 .setContent(json)
                 ;
         AppClient.getInstance().post(request, new ACallback<String>() {
