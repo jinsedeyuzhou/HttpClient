@@ -41,7 +41,7 @@ afterEvaluate {
 
                 // You can then customize attributes of the publication as shown below.
                 groupId = 'com.jinsedeyuzhou.picture'
-                artifactId = 'final'
+                artifactId = 'lib_picture'
                 version = '1.0.3'
             }
             // Creates a Maven publication called “debug”.
@@ -50,7 +50,7 @@ afterEvaluate {
                 from components.debug
 
                 groupId = 'com.jinsedeyuzhou.picture'
-                artifactId = 'final-debug'
+                artifactId = 'lib_picture_debug'
                 version = '1.0.3'
             }
         }

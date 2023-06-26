@@ -60,8 +60,8 @@ afterEvaluate {
                 from components.release
 
                 // You can then customize attributes of the publication as shown below.
-                groupId = 'com.jinsedeyuzhou.network'
-                artifactId = 'final'
+                groupId = 'com.jinsedeyuzhou.http'
+                artifactId = 'network'
                 version = '1.0.3'
             }
             // Creates a Maven publication called “debug”.
@@ -69,8 +69,8 @@ afterEvaluate {
                 // Applies the component for the debug build variant.
                 from components.debug
 
-                groupId = 'com.jinsedeyuzhou.network'
-                artifactId = 'final-debug'
+                groupId = 'com.jinsedeyuzhou.http'
+                artifactId = 'network_debug'
                 version = '1.0.3'
             }
         }
