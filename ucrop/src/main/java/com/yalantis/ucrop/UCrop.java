@@ -3,6 +3,7 @@ package com.yalantis.ucrop;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
+import android.arch.core.BuildConfig;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
