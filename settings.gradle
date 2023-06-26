@@ -1,2 +1,1 @@
 include ':app',':HttpClient',':picture_library', ':ucrop'
-rootProject.name = 'lib'

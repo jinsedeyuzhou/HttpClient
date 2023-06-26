@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'maven-publish'
 
-group='com.jinsedeyuzhou.netwrok'
+
 
 android {
     compileSdkVersion 30
@@ -49,4 +49,30 @@ dependencies {
     api 'com.squareup.okhttp:okhttp-apache:2.5.0'
     api 'com.squareup.okhttp:okhttp-urlconnection:2.5.0'
     api 'com.orhanobut:logger:2.2.0'
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            // Creates a Maven publication called "release".
+            release(MavenPublication) {
+                // Applies the component for the release build variant.
+                from components.release
+
+                // You can then customize attributes of the publication as shown below.
+                groupId = 'com.jinsedeyuzhou.network'
+                artifactId = 'final'
+                version = '1.0.3'
+            }
+            // Creates a Maven publication called “debug”.
+            debug(MavenPublication) {
+                // Applies the component for the debug build variant.
+                from components.debug
+
+                groupId = 'com.jinsedeyuzhou.network'
+                artifactId = 'final-debug'
+                version = '1.0.3'
+            }
+        }
+    }
 }
