@@ -1,6 +1,6 @@
 package com.ebrightmoon.http.convert;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.ebrightmoon.http.common.ResponseHelper;
 import com.ebrightmoon.http.response.ResponseResult;

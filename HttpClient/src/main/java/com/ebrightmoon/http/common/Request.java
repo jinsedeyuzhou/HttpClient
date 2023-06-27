@@ -1,7 +1,7 @@
 package com.ebrightmoon.http.common;
 
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.ebrightmoon.http.body.UploadProgressRequestBody;
 import com.ebrightmoon.http.callback.UCallback;

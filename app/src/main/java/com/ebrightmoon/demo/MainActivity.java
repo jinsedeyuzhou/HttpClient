@@ -3,39 +3,26 @@ package com.ebrightmoon.demo;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.ebrightmoon.demo.http.Callback;
-import com.ebrightmoon.demo.http.HttpManager;
-import com.ebrightmoon.demo.http.RequestParams;
 import com.ebrightmoon.http.callback.ACallback;
 import com.ebrightmoon.http.common.Request;
 import com.ebrightmoon.http.core.ApiTransformer;
 import com.ebrightmoon.http.mode.CacheMode;
 import com.ebrightmoon.http.mode.CacheResult;
+import com.ebrightmoon.http.recycle.RecycleBaseActivity;
 import com.ebrightmoon.http.restrofit.AppClient;
-import com.ebrightmoon.http.restrofit.HttpClient;
 import com.ebrightmoon.http.subscriber.ApiCallbackSubscriber;
-import com.ebrightmoon.http.util.GsonUtil;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
-import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-import retrofit2.Retrofit;
-
-import static com.ebrightmoon.http.mode.ApiHost.getHttp;
 
 /**
  * catSort : 0
@@ -53,7 +40,7 @@ import static com.ebrightmoon.http.mode.ApiHost.getHttp;
  * sign : 20748eb8f360ac9c08a2e1e242d00393
  */
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends RecycleBaseActivity implements View.OnClickListener {
 
     private ShoppingCart shoppingCart;
     private String json;
@@ -480,8 +467,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void postJson() {
         Request.Builder request = new Request.Builder()
                 .setSuffixUrl("tmsmobile/route/upload")
-                .setContent(json)
-                ;
+                .setLifecycleSubject(lifecycleSubject)
+                .setContent(json);
         AppClient.getInstance().post(request, new ACallback<String>() {
 
             @Override

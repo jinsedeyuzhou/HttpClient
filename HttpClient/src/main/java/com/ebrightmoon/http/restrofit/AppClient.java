@@ -177,7 +177,19 @@ public class AppClient {
     public <T> void request(Request.Builder request, ACallback<T> callback) {
         if (request != null) {
             httpRequest = request.build();
+        } else {
+            httpRequest = new Request.Builder().build();
         }
+       common(callback);
+    }
+
+    /**
+     * 通用 请求
+     *
+     * @param callback
+     * @param <T>
+     */
+    public <T> void common(ACallback<T> callback) {
         initGlobalParams();
         initLocalParams();
         execute(callback);
@@ -194,10 +206,12 @@ public class AppClient {
         if (request != null) {
             request.setMethod(Method.GET);
             httpRequest = request.build();
+        } else {
+            Request.Builder options = new Request.Builder();
+            options.setMethod(Method.GET);
+            httpRequest = options.build();
         }
-        initGlobalParams();
-        initLocalParams();
-        execute(callback);
+       common(callback);
     }
 
     /**
@@ -212,9 +226,12 @@ public class AppClient {
             request.setMethod(Method.POST);
             httpRequest = request.build();
         }
-        initGlobalParams();
-        initLocalParams();
-        execute(callback);
+        else {
+            Request.Builder options = new Request.Builder();
+            options.setMethod(Method.POST);
+            httpRequest = options.build();
+        }
+        common(callback);
     }
 
     /**
@@ -229,9 +246,12 @@ public class AppClient {
             request.setMethod(Method.DOWNLOAD);
             httpRequest = request.build();
         }
-        initGlobalParams();
-        initLocalParams();
-        execute(callback);
+        else {
+            Request.Builder options = new Request.Builder();
+            options.setMethod(Method.DOWNLOAD);
+            httpRequest = options.build();
+        }
+        common(callback);
     }
 
     /**
@@ -246,9 +266,12 @@ public class AppClient {
             request.setMethod(Method.UPLOAD);
             httpRequest = request.build();
         }
-        initGlobalParams();
-        initLocalParams();
-        execute(callback);
+        else {
+            Request.Builder options = new Request.Builder();
+            options.setMethod(Method.UPLOAD);
+            httpRequest = options.build();
+        }
+        common(callback);
     }
 
 

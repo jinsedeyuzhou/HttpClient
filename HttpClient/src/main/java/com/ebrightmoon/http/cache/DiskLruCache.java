@@ -16,7 +16,7 @@
 
 package com.ebrightmoon.http.cache;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;

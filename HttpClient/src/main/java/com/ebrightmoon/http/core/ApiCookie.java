@@ -1,7 +1,7 @@
 package com.ebrightmoon.http.core;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 
 import com.ebrightmoon.http.mode.CookiesStore;

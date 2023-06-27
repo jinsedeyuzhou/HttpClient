@@ -1,7 +1,7 @@
 package com.ebrightmoon.http.body;
 
 import android.annotation.SuppressLint;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 
 import com.ebrightmoon.http.callback.UCallback;

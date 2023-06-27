@@ -1,6 +1,6 @@
 package com.ebrightmoon.http.recycle;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
